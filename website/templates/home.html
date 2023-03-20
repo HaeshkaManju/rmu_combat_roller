@@ -1,0 +1,352 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+	<h1 class="justify-content-center" style="text-align: center">
+	This is the home page.
+	</h1>
+	
+	<!-- Begin Flask Flash: Attack Roll Notice -->
+	<h3>
+	{% with messages = get_flashed_messages(with_categories = true) %}
+			{% for message in messages %}
+			<div class="alert alert-success alert-dismissable fade show" name="Attack Result" id="Attack Result" role="alert">
+				{{ message }}
+			<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span></button>
+			</div>
+			
+			{% endfor %}
+			
+	{% endwith %}
+	</h3>
+	<!-- End Flask Flash: Attack Roll Notice -->
+{% endblock %}
+
+{% block userinputs %}
+<div class="container pt-1 border justify-content-center">
+	<form method="POST">
+	<!-- Submit Button --> 
+	<div class="input-group justify-content-center">
+		<button type="submit" class="btn btn-primary">Attack!</button>
+	</div>
+	<!-- End Button -->
+	
+	<!-- Begin Attacker Related Inputs -->
+	<div class="form-group">
+		<div class="input-group mb-3">
+			<label for="browser" class="input-group-text" list="weapons" name="weapons" id="weapons">Attacker's Weapon</label>
+				<select role="menu" class="form-control" aria-labelledby="menu1" name="weapons" id="weapons">
+				<option selected>Choose...</option>
+				{% for i, w in weapons %}
+				<option value="{{ w }}">{{ w }}</option>
+				{% endfor %}
+				</select>
+			<div class="input-group">
+				<span class="input-group-text">Offensive Bonus (OB)</span>
+				<input type="text" class="form-control" name="ob" id="ob" placeholder="0">
+			</div>
+		</div>
+	</div>
+	<!-- End Attacker Related Inputs -->
+	
+	<!-- Begin Defender Related Inputs -->
+	<div class="form-group">
+		<div class="input-group mb-3">
+			<label for="browser" class="input-group-text" list="armor_type" name="armor_type" id="armor_type">Defender's Armor Type</label>
+			<select role="menu" class="form-control" aria-labelledby="menu1" name="armor_type" id="armor_type">
+				<option selected>Choose...</option>
+				{% for i, a, n, d in armor_type %}
+					<option value={{ a }}>{{ a }}</option>
+				{% endfor %}
+			</select>
+			
+			<div class="input-group">
+				<span class="input-group-text">Defensive Bonus (DB)</span>
+				<input type="text" class="form-control" name="db" id="db" placeholder="0">
+			</div>
+		</div>
+	</div>
+	<!-- End Defender Related Inputs -->
+
+
+	
+	<!-- Begin Combat Modifier Inputs -->
+	<!-- Begin COLLAPSE 1 -->
+		<div class="container">
+			<button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#collapse1">Collapse/Expand OB Mods</button>
+		<!-- Begin "offensive_bonus_modifiers" input -->
+		<div class="collapse show" id="collapse1">
+			<div class="input-group mb-3">
+			<label for="defensive_bonus_modifiers">Offensive Bonus Modifiers</label>
+				<div class="input-group">
+					{% for s, o in offensive_bonus_modifiers_view %}
+					<div class="input-group-text">
+						<input type="checkbox" name="offensive_bonus_modifiers_view" id="offensive_bonus_modifiers_view" value={{ o }}>
+					</div>
+					<div class="input-group-append">
+						<span class="form-control" name="offensive_bonus_modifiers_view" id="offensive_bonus_modifiers_view">{{ s }}: {{ o }}</span>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+		</div>
+		<!-- End "offensive_bonus_modifiers" input -->
+	<!-- End COLLAPSE 1 -->
+		
+
+		
+		<!-- Begin "defensive_bonus_modifiers" input -->
+		<!-- Begin COLLAPSE 2 -->
+		<div class="container">
+			<button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#collapse2">Collapse/Expand DB Mods</button>
+		<div class="collapse show" id="collapse2">
+			<div class="input-group mb-3">
+			<label for="defensive_bonus_modifiers">Defensive Bonus Modifiers</label>
+				<div class="input-group">
+					{% for sit, d in defensive_bonus_modifiers_view %}
+					<div class="input-group-text">
+						<input type="checkbox" name="defensive_bonus_modifiers_view" id="defensive_bonus_modifiers_view" value={{ d }}>
+					</div>
+					<div class="input-group-append">
+						<span class="form-control" name="defensive_bonus_modifiers_view" id="defensive_bonus_modifiers_view">{{ sit }}</span>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+		</div>
+		<!-- End "defensive_bonus_modifiers" input -->
+		<!-- End COLLAPSE 2 -->
+
+		<!-- Begin COLLAPSE 3 -->	
+		<!-- Begin "hit_loss_penalties" input -->
+		<div class="container">
+			<button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#collapse3">Collapse/Expand Attacker Mods</button>
+		<div class="collapse show" id="collapse3">
+		<div class="form-group">
+			<div class="input-group mb-3">
+			<label for="hit_loss_penalties">Hit Loss Penalties</label>
+				<div class="input-group">
+					{% for loss, p in hit_loss_penalties_view[:1] %}
+					<div class="input-group-text">
+						<input type="radio" name="hit_loss_penalties_view" aria-label="Radio button for following text input" value={{ p }} checked>
+					</div>
+					<div class="input-group-append">
+						<span class="form-control"  name="hit_loss_penalties_view" id="hit_loss_penalties_view">{{ loss }}%, Penalty: {{ p }}</span>
+					</div>
+					{% endfor %}
+					{% for loss, p in hit_loss_penalties_view[1:] %}
+					<div class="input-group-text">
+						<input type="radio" name="hit_loss_penalties_view" aria-label="Radio button for following text input" value={{ p }}>
+					</div>
+					<div class="input-group-append">
+						<span class="form-control"  name="hit_loss_penalties_view" id="hit_loss_penalties_view">{{ loss }}%, Penalty: {{ p }}</span>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+		<!-- End "hit_loss_penalties" input -->
+		
+		<!-- Begin "lighting" input -->
+		
+		<!-- End "lighting" input -->
+		
+		<!-- Begin "movement_penalties" input -->
+		<div class="form-group">
+			<div class="input-group mb-3">
+			<label for="movement_penalties">Movement Penalties</label>
+				<div class="input-group">
+					<table class="table-bordered">
+						<tr>
+						<th>Select</th>
+						<th>Pace</th>
+						<th>BMR</th>
+						<th>Penalty</th>
+						</tr>
+						<tr>
+						<td><div class="input-group-text">
+							<input type="radio" name="movement_penalties_view" aria-label="Radio button for following text input" value="0" checked>
+						</div></td>
+						<td>N/A</td>
+						<td>0</td>
+						<td>0</td>
+						</tr>
+					{% for pace, b, pen in movement_penalties_view %}
+						<tr>
+						<td>
+						<div class="input-group-text">
+							<input type="radio" name="movement_penalties_view" aria-label="Radio button for following text input" value="{{ pen }}">
+						</div>
+						</td>
+						<td>
+							{{ pace }}
+						</td>
+						<td>
+							{{ b }}
+						</td>
+						<td>
+							{{ pen }}
+						</td>
+						</tr>
+					{% endfor %}
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- End "movement_penalties" input -->
+
+		<!-- Begin "armors_penalty_vambraces_view" input -->
+		<div class="form-group">
+			<div class="input-group mb-3">
+			<label for="armors_penalty_vambraces_view">Missile Penalties: Vambraces</label>
+				<div class="input-group">
+					<div class="input-group-text">
+						<input type="radio" name="armors_penalty_vambraces_view" aria-label="Radio button for following text input" value="0"
+ checked>
+					</div>
+					<div class="input-group-append">
+						<span class="form-control"  name="armors_penalty_vambraces_view" id="armors_penalty_vambraces_view">Not Applicable</span>
+					</div>
+					{% for armor_type, m, mp in armors_penalty_vambraces_view %}
+					<div class="input-group-text">
+						<input type="radio" name="armors_penalty_vambraces_view" aria-label="Radio button for following text input" value="{{ mp }}">
+					</div>
+					<div class="input-group-append">
+						<span class="form-control"  name="armors_penalty_vambraces_view" id="armors_penalty_vambraces_view">AT{{ armor_type }}: {{ mp }}</span>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+		<!-- End "armors_penalty_vambraces_view" input -->
+		</div>
+		</div>
+		<!-- End COLLAPSE 3 -->
+
+		<!-- Begin COLLAPSE 4 -->
+		<!-- Begin "charging_bonus" input -->
+		<div class="container">
+			<button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#collapse4">Collapse/Expand Misc Mods</button>
+		<div class="collapse show" id="collapse4">
+		<div class="form-group">
+			<div class="input-group mb-3">
+			<label for="charging_bonus_view">Charging Bonus</label>
+				<div class="input-group">
+					<div class="input-group-text">
+						<input type="radio" name="charging_bonus_view" aria-label="Radio button for following text input" value="0" checked>
+					</div>
+					<div class="input-group-append">
+						<span class="form-control"  name="charging_bonus_view" id="charging_bonus_view">Not Applicable</span>
+					</div>
+					{% for s, o in charging_bonus_view %}
+					<div class="input-group-text">
+						<input type="radio" name="charging_bonus_view" aria-label="Radio button for following text input" value={{ o }}>
+					</div>
+					<div class="input-group-append">
+						<span class="form-control"  name="charging_bonus_view" id="charging_bonus_view">{{ s }}: {{ o }}</span>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+		<!-- End "charging bonus" input -->
+
+		<!-- Begin "slaying_crit_mod" input -->
+		<div class="form-group">
+			<div class="input-group mb-3">
+			<label for="slaying_crit_mod_view">Slaying Critical Modifier</label>
+				<div class="input-group">
+					<div class="input-group-text">
+						<input type="radio" name="slaying_crit_mod_view" aria-label="Radio button for following text input" value="0" checked>
+					</div>
+					<div class="input-group-append">
+						<span class="form-control"  name="slaying_crit_mod_view" id="slaying_crit_mod_view">Not Applicable</span>
+					</div>
+					{% for d, c in slaying_crit_mod_view %}
+					<div class="input-group-text">
+						<input type="radio" name="slaying_crit_mod_view" aria-label="Radio button for following text input" value={{ c }}>
+					</div>
+					<div class="input-group-append">
+						<span class="form-control"  name="slaying_crit_mod_view" id="slaying_crit_mod_view">{{ d }}: +{{ c }}</span>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+		<!-- End "slaying_crit_mod" input -->
+
+		<!-- Begin "protect" input -->
+		<div class="form-group">
+			<div class="input-group mb-3">
+			<label for="protect_view">Protect(ion)</label>
+				<div class="input-group">
+					<div class="input-group-text">
+						<input type="radio" name="protect_view" aria-label="Radio button for following text input" value="0" checked>
+					</div>
+					<div class="input-group-append">
+						<span class="form-control"  name="protect_view" id="protect_view">Not Applicable</span>
+					</div>
+					{% for s, o in protect_view %}
+					<div class="input-group-text">
+						<input type="radio" name="protect_view" aria-label="Radio button for following text input" value={{ o }}>
+					</div>
+					<div class="input-group-append">
+						<span class="form-control"  name="protect_view" id="protect_view">{{ s }}: {{ o }}</span>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+		<!-- End "protect" input -->
+		
+		<!-- Begin "subdual" input -->
+		<div class="form-group">
+			<div class="input-group mb-3">
+			<label for="subdual_view">Subdual View</label>
+				<div class="input-group">
+					<div class="input-group-text">
+						<input type="radio" name="subdual_view" aria-label="Radio button for following text input" value="0" checked>
+					</div>
+					<div class="input-group-append">
+						<span class="form-control"  name="subdual_view" id="subdual_view">Not Applicable</span>
+					</div>
+					{% for a, m in subdual_view %}
+					<div class="input-group-text">
+						<input type="radio" name="subdual_view" aria-label="Radio button for following text input" value="{{ m }}">
+					</div>
+					<div class="input-group-append">
+						<span class="form-control"  name="subdual_view" id="subdual_view">{{ a }}: {{ m }}</span>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+		<!-- End "subdual" input -->
+		
+		<!-- Begin "subdual_secondaries" input -->
+		<div class="form-group">
+			<div class="input-group mb-3">
+			<label for="subdual_secondaries">Subdual Modifiers (secondary)</label>
+				<div class="input-group">
+					{% for g, m in subdual_secondaries_view %}
+					<div class="input-group-text">
+						<input type="checkbox" name="subdual_secondaries_view" id="subdual_secondaries_view" value="{{ m }}">
+					</div>
+					<div class="input-group-append">
+						<span class="form-control" name="subdual_secondaries_view" id="subdual_secondaries_view">{{ g }} : {{ m }}</span>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>	
+		<!-- End "subdual_secondaries" input -->
+		
+	<!-- End Combat Modifier Inputs -->
+	</div>
+	</div>
+	<!-- End COLLAPSE 4 -->
+	</form>
+</div>
+{% endblock %}

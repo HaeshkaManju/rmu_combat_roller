@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="This is Screen Reader viewable.  Be Descriptive.">
+		<meta name="author" content="Living Novel Enterprises, LLC.  For support contact: Haeshka on ICE Discord server.">
+		
+		<link rel="icon" href="img/#favicon.ico">
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.grid.min') }}" />
+		
+		<title>{% block title %}RMU Combat Tracker{% endblock %}</title>
+    {% endblock %}
+</head>
+<body>
+	<!-- Begin Navigation -->
+	<nav>
+	{% block navigation %}
+		<ul class="nav justify-content-center">
+		  <li class="nav-item">
+			<a class="nav-link active" href="home">Home</a>
+		  </li>
+		  <li class="nav-item">
+			<a class="nav-link" href="tables">Simple Tables</a>
+		  </li>
+		  <li class="nav-item">
+			<a class="nav-link" href="character">Under Construction</a>
+		  </li>
+		</ul>
+	{% endblock %}
+	</nav>
+	<!-- End Navigation -->
+
+	<!-- Begin Main Content -->
+    <div class="container justify-content-center" id="content">
+	{% block content %}
+	
+	{% endblock %}	
+	</div>
+	<!-- End Main Content -->
+
+	<!-- Begin Pills Tabs -->
+	<navbar>
+	{% block pilltabs %}
+
+	{% endblock %}
+	</navbar>
+	<!-- End Pill Tabs -->
+	
+	<!-- Begin User Inputs -->
+	{% block userinputs %}
+
+	{% endblock %}
+	<!-- End User Inputs -->
+	
+	<!-- Begin Footer -->
+    <div id="footer">
+	{% block footer %}
+		Software Developed by <a href="#">C. Michael Fisher</a>.
+	{% endblock %}
+    </div>
+	<!-- End Footer -->
+	
+	<!-- Begin No Screen Reader -->
+	<div id="nosr">	
+	{% block jsincludes %}
+		<!-- Yeah, I have no idea how this url_for thing works. But, it works. -->
+		<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.3.1.slim.min.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+	{% endblock %}
+	</div>
+	<!-- End of No Screen Reader-->
+
+</body>
+</html>

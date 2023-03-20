@@ -1,0 +1,73 @@
+{% extends "home.html" %}
+{% block title %}Pill Tabs{% endblock %}
+<ul class="nav nav-pills mb-3 justify-content-center" id="pills-tab" role="tablist">
+	<li class="nav-item">
+	<a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Attacker</a>
+	</li>
+	<li class="nav-item">
+	<a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Results</a>
+	</li>
+	<li class="nav-item">
+	<a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Defender</a>
+	</li>
+</ul>
+<div class="tab-content justify-content-center" id="pills-tabContent">
+	<div class="tab-pane fade show active justify-content-center" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+		{% block pilltab1content %}
+			<div class="container pt-1 border justify-content-center">
+				<label for="browser" class="form-label">Select your Weapon:</label>
+				<input class="form-control" list="weapons" name="weapons" id="weapons">
+				<datalist id="weapons">
+					{% for w in weapons %}
+						<option value="{{ weapons[w] }}">
+					{% endfor %}
+				</datalist>
+				<form>
+					<div class="input-group">
+						<span class="input-group-text">OB</span>
+						<input type="text" class="form-control" placeholder="0">
+					</div>
+				</form>
+			</div>
+		{% endblock %}
+	</div>
+	<div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+		{% block pilltab2content %}
+			<div class="container pt-1 border justify-content-center">
+				<label for="browser" class="form-label">Attack Results</label>
+				<div>
+					<form method="POST">
+						<button type="submit" class="btn btn-primary id="attackResults" name="attackRoll">Attack!</button>
+					</form>
+				</div>
+				<h3>
+				{% block resultscontent %}
+				{% endblock %}
+				</h3>
+			</div>
+			
+			
+		{% endblock %}
+	</div>
+	<div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+		{% block pilltab3content %}
+			<div class="container pt-1 border justify-content-center">
+				<label for="browser" class="form-label">Select their Armor Type:</label>
+				<input class="form-control" list="armor_types" name="armor_types" id="armor_types">
+				<datalist id="armor_types">
+					{% for a in armor_types %}
+						<option value="{{ armor_types[a] }}"></option>
+					{% endfor %}
+				</datalist>
+				<form>
+					<div class="input-group">
+						<span class="input-group-text">DB</span>
+						<input type="text" class="form-control" placeholder="0">
+					</div>
+				</form>
+			</div>
+			
+			
+		{% endblock %}
+	</div>
+</div>
